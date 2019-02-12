@@ -31,4 +31,8 @@ export class AppComponent {
           console.log("The POST observable is now completed.");
         });
   }
+
+  authenticated() {
+    return this.app.authenticated;
+  }
 }
