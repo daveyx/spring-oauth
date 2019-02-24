@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { AppService } from '../app.service';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import {Component} from '@angular/core';
+import {AppService} from '../app.service';
+import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 @Component({
   templateUrl: './login.component.html'
@@ -15,9 +15,8 @@ export class LoginComponent {
 
   login() {
     this.app.authenticate(this.credentials, () => {
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/').then();
     });
     return false;
   }
-
 }
