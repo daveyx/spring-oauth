@@ -5,10 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +38,7 @@ public class OauthdemoApplication {
                     .and()
                     .authorizeRequests()
                     .antMatchers("/index.html", "/", "/home", "/login", "/*.js", "/*.ico", "/user").permitAll()
+                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()//allow CORS option calls
                     .anyRequest().authenticated()
                     .and()
                     .logout()
@@ -44,11 +47,12 @@ public class OauthdemoApplication {
                     .deleteCookies("JSESSIONID")
                     .permitAll()
                     .and().csrf()
-                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());;
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }
     }
 
     @RequestMapping("/resource")
+    @CrossOrigin(origins = "*")
     public Map<String, Object> home() {
         final Map<String, Object> model = new HashMap<>();
         model.put("id", UUID.randomUUID().toString());
@@ -57,6 +61,7 @@ public class OauthdemoApplication {
     }
 
     @RequestMapping("/user")
+    @CrossOrigin(origins = "*")
     public Principal user(final Principal user) {
         return user;
     }
