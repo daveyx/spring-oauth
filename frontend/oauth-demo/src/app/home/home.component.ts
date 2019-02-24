@@ -16,14 +16,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.authenticated()) {
-
-      this.http.get('resource').subscribe(data => this.greeting = data);
-    }
+    this.app.getResource().subscribe(data => this.greeting = data);
   }
 
   authenticated() {
     return this.app.authenticated;
   }
-
 }
