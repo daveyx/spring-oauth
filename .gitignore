@@ -25,4 +25,4 @@
 /build/
 
 ### app specific ###
-src/main/resources/static
+backend-spring
