@@ -25,7 +25,15 @@ public class OauthdemoApplication {
     public Map<String, Object> home() {
         final Map<String, Object> model = new HashMap<>();
         model.put("id", UUID.randomUUID().toString());
-        model.put("content", "Hello World");
+        model.put("content", "Hello Secured World");
+        return model;
+    }
+
+    @RequestMapping("/api/public-resource")
+    @CrossOrigin(origins = "*")
+    public Map<String, Object> publicHome() {
+        final Map<String, Object> model = new HashMap<>();
+        model.put("content", "Hello unsecured World");
         return model;
     }
 }
