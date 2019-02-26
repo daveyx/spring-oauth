@@ -1,3 +1,6 @@
-header ul li a:first-of-type {
-  padding-left: 0;
+header {
+  margin-top: 1vh;
+}
+.nav > li > a {
+  margin-top: 2vh;
 }
