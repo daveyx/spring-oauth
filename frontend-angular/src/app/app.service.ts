@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class AppService {
@@ -29,11 +29,15 @@ export class AppService {
         return callback && callback();
       },
       error1 => {
-        console.error('error /user ', error1)
+        console.error('error /user ', error1);
       });
   }
 
   getResource(): Observable<any> {
-    return this.http.get('http://localhost:8080/resource');
+    if (this.authenticated) {
+      return this.http.get('http://localhost:8080/resource');
+    } else {
+      return this.http.get('http://localhost:8080/api/public-resource');
+    }
   }
 }

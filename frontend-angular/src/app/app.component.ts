@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import {Router} from '@angular/router';
-import {AppService} from './app.service';
+import { Router } from '@angular/router';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,6 @@ import {AppService} from './app.service';
 })
 export class AppComponent {
   constructor(private app: AppService, private http: HttpClient, private router: Router) {
-    this.app.authenticate(undefined, undefined);
   }
 
   logout() {
@@ -19,16 +18,16 @@ export class AppComponent {
       {})
       .subscribe(
         (val) => {
-          console.log("POST call successful value returned in body",
+          console.log('POST call successful value returned in body',
             val);
           this.app.authenticated = false;
           this.router.navigateByUrl('/login');
         },
         response => {
-          console.log("POST call in error", response);
+          console.log('POST call in error', response);
         },
         () => {
-          console.log("The POST observable is now completed.");
+          console.log('The POST observable is now completed.');
         });
   }
 
