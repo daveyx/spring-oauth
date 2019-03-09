@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {AppService} from '../app.service';
-import {HttpClient} from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
+import { AuthenticationService } from '../service/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -9,10 +9,9 @@ import {HttpClient} from '@angular/common/http';
 })
 export class HomeComponent implements OnInit {
 
-  title = 'Demo';
   greeting = {};
 
-  constructor(private app: AppService, private http: HttpClient) {
+  constructor(private authenticationService: AuthenticationService, private app: AppService) {
   }
 
   ngOnInit() {
@@ -20,6 +19,6 @@ export class HomeComponent implements OnInit {
   }
 
   authenticated() {
-    return this.app.authenticated;
+    return this.authenticationService.authenticated;
   }
 }

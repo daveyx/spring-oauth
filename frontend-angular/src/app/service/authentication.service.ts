@@ -16,7 +16,6 @@ export class AuthenticationService {
   constructor(private http: HttpClient) {
   }
 
-
   login(username: string, password: string) {
     const body = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&grant_type=password`;
     const httpHeaders = new HttpHeaders()
@@ -29,6 +28,8 @@ export class AuthenticationService {
 
     return this.http.post(AuthenticationService.AUTH_URL, body, options).subscribe(res => {
         console.log(res);
+        // tslint:disable-next-line:no-string-literal
+        this.token = res['access_token'];
       },
       error1 => {
         console.log('--------------->');
