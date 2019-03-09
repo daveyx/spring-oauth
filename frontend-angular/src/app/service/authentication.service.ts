@@ -34,4 +34,8 @@ export class AuthenticationService {
         console.error(JSON.stringify(error1));
       });
   }
+
+  logout() {
+
+  }
 }
