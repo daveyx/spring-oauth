@@ -1,40 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthenticationService } from './service/authentication.service';
 
 @Injectable()
 export class AppService {
 
-  authenticated = false;
-  credentials: any;
-
-  constructor(private http: HttpClient) {
-  }
-
-  authenticate(credentials, callback) {
-    if (credentials) {
-      this.credentials = btoa(credentials.username + ':' + credentials.password);
-    }
-
-    const headers = new HttpHeaders(credentials ? {
-      authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
-    } : {});
-
-    this.http.get('http://localhost:8080/user', {headers: headers}).subscribe(response => {
-        if (response['name']) {
-          this.authenticated = true;
-        } else {
-          this.authenticated = false;
-        }
-        return callback && callback();
-      },
-      error1 => {
-        console.error('error /user ', error1);
-      });
+  constructor(private http: HttpClient,
+              private authenticationService: AuthenticationService) {
   }
 
   getResource(): Observable<any> {
-    if (this.authenticated) {
+    if (this.authenticationService.authenticated) {
       return this.http.get('http://localhost:8080/resource');
     } else {
       return this.http.get('http://localhost:8080/api/public-resource');
