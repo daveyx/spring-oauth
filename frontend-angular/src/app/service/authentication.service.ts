@@ -11,6 +11,7 @@ export class AuthenticationService {
   static CLIENT_SECRET = 'XY7kmzoNzl100';
 
   public authenticated = false;
+  token: string;
 
   constructor(private http: HttpClient) {
   }
