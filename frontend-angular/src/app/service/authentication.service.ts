@@ -10,6 +10,8 @@ export class AuthenticationService {
   static CLIENT_ID = 'testjwtclientid';
   static CLIENT_SECRET = 'XY7kmzoNzl100';
 
+  public authenticated = false;
+
   constructor(private http: HttpClient) {
   }
 
