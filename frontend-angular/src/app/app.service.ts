@@ -12,7 +12,7 @@ export class AppService {
 
   getResource(): Observable<any> {
     if (this.authenticationService.authenticated) {
-      return this.http.get('http://localhost:8080/resource');
+      return this.http.get('http://localhost:8080/api/resource');
     } else {
       return this.http.get('http://localhost:8080/api/public-resource');
     }

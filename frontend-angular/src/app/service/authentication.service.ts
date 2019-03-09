@@ -28,8 +28,11 @@ export class AuthenticationService {
 
     return this.http.post(AuthenticationService.AUTH_URL, body, options).subscribe(res => {
         console.log(res);
-        // tslint:disable-next-line:no-string-literal
-        this.token = res['access_token'];
+        if (res !== null && res.hasOwnProperty('access_token')) {
+          // tslint:disable-next-line:no-string-literal
+          this.token = res['access_token'];
+          this.authenticated = true;
+        }
       },
       error1 => {
         console.log('--------------->');
