@@ -1,7 +1,6 @@
-import {Component} from '@angular/core';
-import {AppService} from '../app.service';
-import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { AuthenticationService } from '../service/authentication.service';
 
 @Component({
@@ -9,19 +8,15 @@ import { AuthenticationService } from '../service/authentication.service';
 })
 export class LoginComponent {
 
-  credentials = {username: '', password: ''};
+  public credentials: any = {username: '', password: ''};
 
-  constructor(private app: AppService,
-              private authService: AuthenticationService,
-              private http: HttpClient,
+  constructor(private authService: AuthenticationService,
               private router: Router) {
   }
 
-  login() {
-    this.authService.login(this.credentials.username, this.credentials.password);
-    // this.app.authenticate(this.credentials, () => {
-    //   this.router.navigateByUrl('/').then();
-    // });
-    // return false;
+  public login(): void {
+    this.authService.login(this.credentials.username, this.credentials.password).subscribe(() => {
+      this.router.navigateByUrl('/').then();
+    });
   }
 }

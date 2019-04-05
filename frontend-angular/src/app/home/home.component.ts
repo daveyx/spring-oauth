@@ -11,11 +11,11 @@ export class HomeComponent implements OnInit {
 
   greeting = {};
 
-  constructor(private authenticationService: AuthenticationService, private app: AppService) {
+  constructor(private authenticationService: AuthenticationService, private appService: AppService) {
   }
 
   ngOnInit() {
-    this.app.getResource().subscribe(data => this.greeting = data);
+    this.appService.getResource().subscribe(data => this.greeting = data);
   }
 
   authenticated() {
