@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { AuthenticationService } from './service/authentication.service';
+import { ApiService } from './service/api.service';
 
 @Injectable()
 export class AppService {
 
-  constructor(private http: HttpClient,
+  constructor(private apiService: ApiService,
               private authenticationService: AuthenticationService) {
   }
 
-  getResource(): Observable<any> {
+  public getResource(): Observable<object> {
     if (this.authenticationService.authenticated) {
-      return this.http.get('http://localhost:8080/api/resource');
+      return this.apiService.get('/resource');
     } else {
-      return this.http.get('http://localhost:8080/api/public-resource');
+      return this.apiService.get('/public-resource');
     }
   }
 }

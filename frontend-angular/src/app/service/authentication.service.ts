@@ -1,21 +1,24 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  private static AUTH_URL = 'http://localhost:8080/oauth/token';
+  private static OAUTH_ENDPOINT = 'http://localhost:8080/oauth';
+  private static AUTH_URL = '/token';
   private static CLIENT_ID = 'testjwtclientid';
   private static CLIENT_SECRET = 'XY7kmzoNzl100';
-  private static LOGOUT_URL = 'http://localhost:8080/oauth/logout';
+  private static LOGOUT_URL = '/logout';
 
   public authenticated = false;
   token: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private apiService: ApiService) {
   }
 
   login(username: string, password: string): Observable<object> {
@@ -31,7 +34,7 @@ export class AuthenticationService {
 
     const options = {headers: httpHeaders};
 
-    this.http.post(AuthenticationService.AUTH_URL, body, options).subscribe(res => {
+    this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.AUTH_URL, body, options).subscribe(res => {
         // console.log(res);
         if (res !== null && res.hasOwnProperty('access_token')) {
           // tslint:disable-next-line:no-string-literal
@@ -52,7 +55,7 @@ export class AuthenticationService {
   public logout(): Observable<object> {
 
     const logOutSubject: Subject<object> = new Subject<object>();
-    this.http.get(AuthenticationService.LOGOUT_URL).subscribe(() => {
+    this.apiService.get(AuthenticationService.LOGOUT_URL, AuthenticationService.OAUTH_ENDPOINT).subscribe(() => {
       this.authenticated = false;
       this.token = undefined;
       logOutSubject.next();
