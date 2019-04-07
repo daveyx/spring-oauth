@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { AppService } from './app.service';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
 import { AuthenticationInterceptor } from './interceptor/authentication.interceptor';
+import { AppRoutingModule } from './app-routing.module';
 
 const routes: Routes = [
   {
@@ -37,7 +38,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AppRoutingModule
   ],
   providers: [
     {
