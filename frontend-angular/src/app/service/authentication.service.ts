@@ -21,7 +21,7 @@ export class AuthenticationService {
   constructor(private apiService: ApiService) {
   }
 
-  login(username: string, password: string): Observable<object> {
+  public login(username: string, password: string): Observable<object> {
 
     const loginSubject: Subject<object> = new Subject<object>();
 
