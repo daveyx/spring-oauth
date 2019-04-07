@@ -11,6 +11,8 @@ import { AppService } from './app.service';
 import { ErrorInterceptor } from './interceptor/error.interceptor';
 import { AuthenticationInterceptor } from './interceptor/authentication.interceptor';
 import { AppRoutingModule } from './app-routing.module';
+import { LoginLayoutComponent } from './components/login-layout/login-layout.component';
+import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
 
 const routes: Routes = [
   {
@@ -32,7 +34,9 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    LoginLayoutComponent,
+    BaseLayoutComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
