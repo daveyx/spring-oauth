@@ -47,6 +47,7 @@ export class AuthenticationService {
       error1 => {
         console.log('--------------->');
         console.error(JSON.stringify(error1));
+        loginSubject.error(JSON.stringify(error1));
       });
 
     return loginSubject;
