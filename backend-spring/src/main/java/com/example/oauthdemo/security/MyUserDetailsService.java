@@ -28,12 +28,12 @@ public class MyUserDetailsService implements UserDetailsService {
 
             @Override
             public String getPassword() {
-                return new BCryptPasswordEncoder().encode("jwtpass");
+                return new BCryptPasswordEncoder().encode("password");
             }
 
             @Override
             public String getUsername() {
-                return "john.doe";
+                return "user";
             }
 
             @Override

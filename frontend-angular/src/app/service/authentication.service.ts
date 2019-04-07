@@ -27,12 +27,12 @@ export class AuthenticationService {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .set('Authorization', 'Basic ' + btoa(AuthenticationService.CLIENT_ID + ':' + AuthenticationService.CLIENT_SECRET));
 
-    console.log('Authorization', 'Basic ' + btoa(AuthenticationService.CLIENT_ID + ':' + AuthenticationService.CLIENT_SECRET));
+    // console.log('Authorization', 'Basic ' + btoa(AuthenticationService.CLIENT_ID + ':' + AuthenticationService.CLIENT_SECRET));
 
     const options = {headers: httpHeaders};
 
     this.http.post(AuthenticationService.AUTH_URL, body, options).subscribe(res => {
-        console.log(res);
+        // console.log(res);
         if (res !== null && res.hasOwnProperty('access_token')) {
           // tslint:disable-next-line:no-string-literal
           this.token = res['access_token'];
@@ -49,10 +49,16 @@ export class AuthenticationService {
     return loginSubject;
   }
 
-  public logout(): void {
+  public logout(): Observable<object> {
+
+    const logOutSubject: Subject<object> = new Subject<object>();
     this.http.get(AuthenticationService.LOGOUT_URL).subscribe(() => {
       this.authenticated = false;
       this.token = undefined;
+      logOutSubject.next();
+      logOutSubject.complete();
     });
+
+    return logOutSubject;
   }
 }
