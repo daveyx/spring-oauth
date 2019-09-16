@@ -25,4 +25,5 @@
 /build/
 
 ### app specific ###
-backend-spring
+backend-spring/target
+
