@@ -1,14 +1,13 @@
-package com.example.oauthdemo.security;
+package com.example.oauthdemo.security2;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -16,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -29,8 +27,8 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(1)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(2)
+public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
 
     @Value("${security.signing-key}")
     private String signingKey;
@@ -38,30 +36,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${security.encoding-strength}")
     private Integer encodingStrength;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(MyUserDetailsService myUserDetailsService) {
-        userDetailsService = myUserDetailsService;
+    public SecurityConfig2(MyUserDetailsService2 myUserDetailsService2) {
+        userDetailsService = myUserDetailsService2;
     }
 
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        // note: if not use authenticationManagerBean(), but authenticationManager the stackoverflow error could occur
-        return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    @Override
+//    public AuthenticationManager authenticationManagerBean() throws Exception {
+//        // note: if not use authenticationManagerBean(), but authenticationManager the stackoverflow error could occur
+//        return super.authenticationManagerBean();
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -73,21 +73,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().anyRequest().authenticated();
     }
 
-    @Bean
+    @Bean(name = "accessTokenConverter2")
     public JwtAccessTokenConverter accessTokenConverter() {
         final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setSigningKey(signingKey);
         return converter;
     }
 
-    @Bean
+    @Bean(name = "tokenStore2")
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
 
-    @Bean
-    @Primary
-    //Making this primary to avoid any accidental duplication with another token service instance of the same name
+    @Bean(name = "tokenServices2")
     public DefaultTokenServices tokenServices() {
         final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
         defaultTokenServices.setTokenStore(tokenStore());
@@ -104,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.OPTIONS);
     }
 
-    @Bean
+    @Bean(name = "processCorsFilter2")
     public FilterRegistrationBean processCorsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();

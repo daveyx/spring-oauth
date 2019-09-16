@@ -1,4 +1,4 @@
-package com.example.oauthdemo.security;
+package com.example.oauthdemo.security2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,14 +15,14 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 
 import java.util.Arrays;
 
-@Configuration
-@EnableAuthorizationServer
-public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+//@Configuration
+//@EnableAuthorizationServer
+public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${security.jwt.client-id}")
+    @Value("${security2.jwt.client-id}")
     private String clientId;
 
-    @Value("${security.jwt.client-secret}")
+    @Value("${security2.jwt.client-secret}")
     private String clientSecret;
 
     @Value("${security.jwt.grant-type}")
@@ -34,7 +34,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.jwt.scope-write}")
     private String scopeWrite = "write";
 
-    @Value("${security.jwt.resource-ids}")
+    @Value("${security2.jwt.resource-ids}")
     private String resourceIds;
 
     @Autowired
@@ -68,6 +68,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenConverter(accessTokenConverter)
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(authenticationManager);
-        endpoints.pathMapping("/oauth/token", "/oauth1/token");
+        endpoints.pathMapping("/oauth/token", "/oauth2/token");
     }
 }

@@ -18,7 +18,6 @@ import java.util.UUID;
 public class OauthdemoApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(OauthdemoApplication.class, args);
     }
 
