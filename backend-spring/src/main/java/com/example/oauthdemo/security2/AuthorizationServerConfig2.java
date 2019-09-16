@@ -1,8 +1,10 @@
 package com.example.oauthdemo.security2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,6 +19,7 @@ import java.util.Arrays;
 
 //@Configuration
 //@EnableAuthorizationServer
+//@Order(2)
 public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security2.jwt.client-id}")
@@ -38,9 +41,11 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
     private String resourceIds;
 
     @Autowired
+    @Qualifier("tokenStore2")
     private TokenStore tokenStore;
 
     @Autowired
+    @Qualifier("accessTokenConverter2")
     private JwtAccessTokenConverter accessTokenConverter;
 
     @Autowired
@@ -51,8 +56,8 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
-        configurer
-                .inMemory()
+        configurer.and()
+//                .inMemory()
                 .withClient(clientId)
                 .secret(passwordEncoder.encode(clientSecret))
                 .authorizedGrantTypes(grantType)
@@ -61,13 +66,14 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
         enhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
         endpoints.tokenStore(tokenStore)
                 .accessTokenConverter(accessTokenConverter)
                 .tokenEnhancer(enhancerChain)
-                .authenticationManager(authenticationManager);
-        endpoints.pathMapping("/oauth/token", "/oauth2/token");
+                .authenticationManager(authenticationManager)
+                .pathMapping("/oauth/token", "/oauth2/token")
+                .pathMapping("/oauth/authorize", "/oauth2/authorize");
     }
 }

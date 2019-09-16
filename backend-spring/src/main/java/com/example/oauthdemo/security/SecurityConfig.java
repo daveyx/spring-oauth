@@ -46,9 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-        // note: if not use authenticationManagerBean(), but authenticationManager the stackoverflow error could occur
         return super.authenticationManagerBean();
     }
 
@@ -66,7 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http
+        http    .antMatcher("/oauth1/**")
+                .requestMatchers().antMatchers("/oauth1/**")
+                .and().httpBasic()
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -24,10 +25,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-@Configuration
-@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(2)
+//@Configuration
+//@EnableWebSecurity
+////@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@Order(2)
 public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
 
     @Value("${security.signing-key}")
@@ -45,18 +46,6 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
         userDetailsService = myUserDetailsService2;
     }
 
-//    @Bean
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        // note: if not use authenticationManagerBean(), but authenticationManager the stackoverflow error could occur
-//        return super.authenticationManagerBean();
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -66,7 +55,10 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http
+        http    .antMatcher("/oauth2/**")
+                .requestMatchers().antMatchers("/oauth2/**")
+                .and().httpBasic()
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
