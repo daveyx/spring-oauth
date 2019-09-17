@@ -39,6 +39,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.jwt.resource-ids}")
     private String resourceIds;
 
+    @Value("${security2.jwt.client-id}")
+    private String clientId2;
+
+    @Value("${security2.jwt.client-secret}")
+    private String clientSecret2;
+
+    @Value("${security2.jwt.resource-ids}")
+    private String resourceIds2;
+
     @Autowired
     private TokenStore tokenStore;
 
@@ -59,7 +68,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .secret(passwordEncoder.encode(clientSecret))
                 .authorizedGrantTypes(grantType)
                 .scopes(scopeRead, scopeWrite)
-                .resourceIds(resourceIds);
+                .resourceIds(resourceIds)
+                .and()
+                .withClient(clientId2)
+                .secret(passwordEncoder.encode(clientSecret2))
+                .authorizedGrantTypes(grantType)
+                .scopes(scopeRead, scopeWrite)
+                .resourceIds(resourceIds2);
     }
 
     @Override

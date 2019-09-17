@@ -23,10 +23,10 @@ import java.util.Arrays;
 public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security2.jwt.client-id}")
-    private String clientId;
+    private String clientId2;
 
     @Value("${security2.jwt.client-secret}")
-    private String clientSecret;
+    private String clientSecret2;
 
     @Value("${security.jwt.grant-type}")
     private String grantType;
@@ -38,7 +38,7 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
     private String scopeWrite = "write";
 
     @Value("${security2.jwt.resource-ids}")
-    private String resourceIds;
+    private String resourceIds2;
 
     @Autowired
     @Qualifier("tokenStore2")
@@ -58,11 +58,11 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
         configurer.and()
 //                .inMemory()
-                .withClient(clientId)
-                .secret(passwordEncoder.encode(clientSecret))
+                .withClient(clientId2)
+                .secret(passwordEncoder.encode(clientSecret2))
                 .authorizedGrantTypes(grantType)
                 .scopes(scopeRead, scopeWrite)
-                .resourceIds(resourceIds);
+                .resourceIds(resourceIds2);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.oauthdemo.security;
 
+import com.example.oauthdemo.security2.MyUserDetailsService2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -39,11 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private Integer encodingStrength;
 
     private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService2;
 
-    public SecurityConfig(MyUserDetailsService myUserDetailsService) {
+    public SecurityConfig(MyUserDetailsService myUserDetailsService, MyUserDetailsService2 myUserDetailsService2) {
         userDetailsService = myUserDetailsService;
+        userDetailsService2 = myUserDetailsService2;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -57,14 +61,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder());
+        auth    .authenticationProvider(authenticationProvider1())
+                .authenticationProvider(authenticationProvider2());
     }
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http    .antMatcher("/oauth1/**")
+        http
+                .antMatcher("/oauth1/**")
                 .requestMatchers().antMatchers("/oauth1/**")
                 .and().httpBasic()
                 .and()
@@ -72,6 +76,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests().anyRequest().authenticated();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider1() {
+        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider2() {
+        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService2);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
     }
 
     @Bean

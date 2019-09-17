@@ -9,6 +9,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -55,7 +57,9 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http    .antMatcher("/oauth2/**")
+        http
+//                .authenticationProvider(authenticationProvider2())
+                .antMatcher("/oauth2/**")
                 .requestMatchers().antMatchers("/oauth2/**")
                 .and().httpBasic()
                 .and()
@@ -64,6 +68,14 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().anyRequest().authenticated();
     }
+
+//    @Bean
+//    public AuthenticationProvider authenticationProvider2() {
+//        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setUserDetailsService(userDetailsService);
+//        authenticationProvider.setPasswordEncoder(passwordEncoder);
+//        return authenticationProvider;
+//    }
 
     @Bean(name = "accessTokenConverter2")
     public JwtAccessTokenConverter accessTokenConverter() {
