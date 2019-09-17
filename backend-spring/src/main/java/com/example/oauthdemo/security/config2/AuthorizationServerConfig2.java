@@ -19,9 +19,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Arrays;
 
+
 @Configuration
 @EnableAuthorizationServer
-@Order(2)
 public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security2.jwt.client-id}")
@@ -51,11 +51,14 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
     @Autowired
     private JwtAccessTokenConverter accessTokenConverter;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {

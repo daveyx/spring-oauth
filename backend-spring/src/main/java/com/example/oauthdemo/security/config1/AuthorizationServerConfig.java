@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -20,9 +19,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Arrays;
 
+
 @Configuration
 @EnableAuthorizationServer
-@Order(1)
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security.jwt.client-id}")
@@ -52,11 +51,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private JwtAccessTokenConverter accessTokenConverter;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
@@ -80,6 +82,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .pathMapping("/oauth/token", "/oauth1/token")
                 .pathMapping("/oauth/authorize", "/oauth1/authorize");
     }
+
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -101,4 +104,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         defaultTokenServices.setSupportRefreshToken(true);
         return defaultTokenServices;
     }
+
 }
