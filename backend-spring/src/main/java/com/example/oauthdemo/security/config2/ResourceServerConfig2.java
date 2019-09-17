@@ -1,4 +1,4 @@
-package com.example.oauthdemo.security2;
+package com.example.oauthdemo.security.config2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

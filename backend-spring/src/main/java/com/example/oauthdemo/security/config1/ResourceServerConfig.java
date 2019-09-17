@@ -1,4 +1,4 @@
-package com.example.oauthdemo.security;
+package com.example.oauthdemo.security.config1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .requestMatchers()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/actuator/**", "/api/public-resource", "/oauth/token").permitAll()
-                .antMatchers("/api/**").authenticated();
+                .antMatchers("/actuator/**", "/api1/public-resource", "/oauth1/token").permitAll()
+                .antMatchers("/api1/**").authenticated();
     }
 }

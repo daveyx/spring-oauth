@@ -1,7 +1,6 @@
-package com.example.oauthdemo.security2;
+package com.example.oauthdemo.security.config1;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -17,15 +16,15 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 
 import java.util.Arrays;
 
-//@Configuration
-//@EnableAuthorizationServer
-//@Order(2)
-public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAdapter {
+@Configuration
+@EnableAuthorizationServer
+@Order(1)
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${security2.jwt.client-id}")
+    @Value("${security.jwt.client-id}")
     private String clientId;
 
-    @Value("${security2.jwt.client-secret}")
+    @Value("${security.jwt.client-secret}")
     private String clientSecret;
 
     @Value("${security.jwt.grant-type}")
@@ -37,15 +36,13 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
     @Value("${security.jwt.scope-write}")
     private String scopeWrite = "write";
 
-    @Value("${security2.jwt.resource-ids}")
+    @Value("${security.jwt.resource-ids}")
     private String resourceIds;
 
     @Autowired
-    @Qualifier("tokenStore2")
     private TokenStore tokenStore;
 
     @Autowired
-    @Qualifier("accessTokenConverter2")
     private JwtAccessTokenConverter accessTokenConverter;
 
     @Autowired
@@ -56,8 +53,8 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
-        configurer.and()
-//                .inMemory()
+        configurer
+                .inMemory()
                 .withClient(clientId)
                 .secret(passwordEncoder.encode(clientSecret))
                 .authorizedGrantTypes(grantType)
@@ -73,7 +70,7 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
                 .accessTokenConverter(accessTokenConverter)
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(authenticationManager)
-                .pathMapping("/oauth/token", "/oauth2/token")
-                .pathMapping("/oauth/authorize", "/oauth2/authorize");
+                .pathMapping("/oauth/token", "/oauth1/token")
+                .pathMapping("/oauth/authorize", "/oauth1/authorize");
     }
 }

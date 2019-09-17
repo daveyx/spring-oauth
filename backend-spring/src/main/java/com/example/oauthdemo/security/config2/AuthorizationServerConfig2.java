@@ -1,6 +1,7 @@
-package com.example.oauthdemo.security;
+package com.example.oauthdemo.security.config2;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -18,13 +19,13 @@ import java.util.Arrays;
 
 @Configuration
 @EnableAuthorizationServer
-@Order(1)
-public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+@Order(2)
+public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${security.jwt.client-id}")
+    @Value("${security2.jwt.client-id}")
     private String clientId;
 
-    @Value("${security.jwt.client-secret}")
+    @Value("${security2.jwt.client-secret}")
     private String clientSecret;
 
     @Value("${security.jwt.grant-type}")
@@ -36,13 +37,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.jwt.scope-write}")
     private String scopeWrite = "write";
 
-    @Value("${security.jwt.resource-ids}")
+    @Value("${security2.jwt.resource-ids}")
     private String resourceIds;
 
     @Autowired
+    @Qualifier("tokenStore2")
     private TokenStore tokenStore;
 
     @Autowired
+    @Qualifier("accessTokenConverter2")
     private JwtAccessTokenConverter accessTokenConverter;
 
     @Autowired
@@ -70,7 +73,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenConverter(accessTokenConverter)
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(authenticationManager)
-                .pathMapping("/oauth/token", "/oauth1/token")
-                .pathMapping("/oauth/authorize", "/oauth1/authorize");
+                .pathMapping("/oauth/token", "/oauth2/token")
+                .pathMapping("/oauth/authorize", "/oauth2/authorize");
     }
 }

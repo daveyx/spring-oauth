@@ -1,4 +1,4 @@
-package com.example.oauthdemo.security2;
+package com.example.oauthdemo.security.config1;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Configuration
-public class MyUserDetailsService2 implements UserDetailsService {
+public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,12 +26,12 @@ public class MyUserDetailsService2 implements UserDetailsService {
 
             @Override
             public String getPassword() {
-                return new BCryptPasswordEncoder().encode("password2");
+                return new BCryptPasswordEncoder().encode("password");
             }
 
             @Override
             public String getUsername() {
-                return "user2";
+                return "user";
             }
 
             @Override
