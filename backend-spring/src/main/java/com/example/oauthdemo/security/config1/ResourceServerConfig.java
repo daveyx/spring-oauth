@@ -9,15 +9,18 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 
+
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private ResourceServerTokenServices tokenServices;
 
     @Value("${security.jwt.resource-ids}")
     private String resourceIds;
+
 
     @Override
     public void configure(final ResourceServerSecurityConfigurer resources) {
@@ -31,6 +34,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/actuator/**", "/api1/public-resource", "/oauth1/token").permitAll()
-                .antMatchers("/api1/**").authenticated();
+                .antMatchers("/api1/**").authenticated()
+                .anyRequest().denyAll();;
     }
+
 }
