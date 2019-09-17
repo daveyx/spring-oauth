@@ -6,7 +6,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,21 +18,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
-
-    @Value("${security.signing-key}")
-    private String signingKey;
 
     @Value("${security.encoding-strength}")
     private Integer encodingStrength;
@@ -42,6 +35,7 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     private final UserDetailsService userDetailsService;
+
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public SecurityConfig2(MyUserDetailsService2 myUserDetailsService2) {
@@ -67,7 +61,7 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http    .antMatcher("/oauth2/**")
+        http.antMatcher("/oauth2/**")
                 .requestMatchers().antMatchers("/oauth2/**")
                 .and().httpBasic()
                 .and()
@@ -75,26 +69,6 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests().anyRequest().authenticated();
-    }
-
-    @Bean(name = "accessTokenConverter2")
-    public JwtAccessTokenConverter accessTokenConverter() {
-        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(signingKey);
-        return converter;
-    }
-
-    @Bean(name = "tokenStore2")
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
-    }
-
-    @Bean(name = "tokenServices2")
-    public DefaultTokenServices tokenServices() {
-        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore());
-        defaultTokenServices.setSupportRefreshToken(true);
-        return defaultTokenServices;
     }
 
     //
@@ -120,4 +94,5 @@ public class SecurityConfig2 extends WebSecurityConfigurerAdapter {
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
+
 }

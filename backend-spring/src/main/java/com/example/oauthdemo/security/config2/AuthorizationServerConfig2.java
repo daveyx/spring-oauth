@@ -1,8 +1,8 @@
 package com.example.oauthdemo.security.config2;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,9 +11,11 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Arrays;
 
@@ -40,12 +42,13 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
     @Value("${security2.jwt.resource-ids}")
     private String resourceIds;
 
+    @Value("${security.signing-key}")
+    private String signingKey;
+
     @Autowired
-    @Qualifier("tokenStore2")
     private TokenStore tokenStore;
 
     @Autowired
-    @Qualifier("accessTokenConverter2")
     private JwtAccessTokenConverter accessTokenConverter;
 
     @Autowired
@@ -76,4 +79,25 @@ public class AuthorizationServerConfig2 extends AuthorizationServerConfigurerAda
                 .pathMapping("/oauth/token", "/oauth2/token")
                 .pathMapping("/oauth/authorize", "/oauth2/authorize");
     }
+
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey(signingKey);
+        return converter;
+    }
+
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
+    }
+
+    @Bean
+    public DefaultTokenServices tokenServices() {
+        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
+    }
+
 }
