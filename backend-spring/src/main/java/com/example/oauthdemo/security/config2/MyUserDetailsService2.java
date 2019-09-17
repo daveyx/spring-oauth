@@ -1,18 +1,18 @@
-package com.example.oauthdemo.security;
+package com.example.oauthdemo.security.config2;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Configuration
-public class MyUserDetailsService implements UserDetailsService {
+@Service
+public class MyUserDetailsService2 implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,12 +26,12 @@ public class MyUserDetailsService implements UserDetailsService {
 
             @Override
             public String getPassword() {
-                return new BCryptPasswordEncoder().encode("password");
+                return new BCryptPasswordEncoder().encode("password2");
             }
 
             @Override
             public String getUsername() {
-                return "user";
+                return "user2";
             }
 
             @Override

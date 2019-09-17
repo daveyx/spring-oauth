@@ -1,4 +1,4 @@
-package com.example.oauthdemo.security;
+package com.example.oauthdemo.security.config1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,15 +9,18 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 
+
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private ResourceServerTokenServices tokenServices;
 
     @Value("${security.jwt.resource-ids}")
     private String resourceIds;
+
 
     @Override
     public void configure(final ResourceServerSecurityConfigurer resources) {
@@ -30,7 +33,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .requestMatchers()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/actuator/**", "/api/public-resource", "/oauth/token").permitAll()
-                .antMatchers("/api/**").authenticated();
+                .antMatchers("/actuator/**", "/api1/public-resource", "/oauth1/token").permitAll()
+                .antMatchers("/api1/**").authenticated()
+                .anyRequest().denyAll();;
     }
+
 }
