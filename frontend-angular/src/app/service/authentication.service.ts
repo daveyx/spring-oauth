@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 
 import { ApiService } from './api.service';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,15 +15,16 @@ export class AuthenticationService {
   private static CLIENT_ID = 'testjwtclientid';
   private static CLIENT_SECRET = 'XY7kmzoNzl100';
   private static LOGOUT_URL = '/logout';
+  private static TOKEN_KEY = 'access_token';
 
   public authenticated = false;
-  token: string;
+
 
   constructor(private apiService: ApiService) {
+    this.authenticated = !!this.getAuthToken();
   }
 
   public login(username: string, password: string): Observable<object> {
-
     const loginSubject: Subject<object> = new Subject<object>();
 
     const body = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&grant_type=password`;
@@ -36,10 +38,9 @@ export class AuthenticationService {
 
     this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.AUTH_URL, body, options).subscribe(res => {
         // console.log(res);
-        if (res !== null && res.hasOwnProperty('access_token')) {
-          // tslint:disable-next-line:no-string-literal
-          this.token = res['access_token'];
+        if (res !== null && res.hasOwnProperty(AuthenticationService.TOKEN_KEY)) {
           this.authenticated = true;
+          localStorage.setItem(AuthenticationService.TOKEN_KEY, res.access_token);
         }
         loginSubject.next();
         loginSubject.complete();
@@ -54,15 +55,22 @@ export class AuthenticationService {
   }
 
   public logout(): Observable<object> {
-
     const logOutSubject: Subject<object> = new Subject<object>();
     this.apiService.get(AuthenticationService.LOGOUT_URL, AuthenticationService.OAUTH_ENDPOINT).subscribe(() => {
       this.authenticated = false;
-      this.token = undefined;
       logOutSubject.next();
       logOutSubject.complete();
     });
 
     return logOutSubject;
   }
+
+  public getAuthToken(): string {
+    return localStorage.getItem(AuthenticationService.TOKEN_KEY);
+  }
+
+  public removeAuthToken(): void {
+    localStorage.removeItem(AuthenticationService.TOKEN_KEY);
+  }
+
 }
