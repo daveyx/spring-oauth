@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -59,6 +60,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final UserDetailsService userDetailsService;
+
+    public AuthorizationServerConfig(MyUserDetailsService myUserDetailsService) {
+        userDetailsService = myUserDetailsService;
+    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
@@ -82,7 +88,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(authenticationManager)
                 .pathMapping("/oauth/token", "/oauth1/token")
-                .pathMapping("/oauth/authorize", "/oauth1/authorize");
+                .pathMapping("/oauth/authorize", "/oauth1/authorize")
+                .userDetailsService(userDetailsService); // <-- this is mandatory for refresh_token
     }
 
     @Bean
