@@ -66,9 +66,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .inMemory()
                 .withClient(clientId)
                 .secret(passwordEncoder.encode(clientSecret))
-                .authorizedGrantTypes(grantType)
+                .authorizedGrantTypes(grantType, "refresh_token")
                 .scopes(scopeRead, scopeWrite)
-                .resourceIds(resourceIds);
+                .resourceIds(resourceIds)
+                .accessTokenValiditySeconds(120)
+                .refreshTokenValiditySeconds(14400); // 14400s = 4h
     }
 
     @Override
