@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 import { AuthenticationService } from '../service/authentication.service';
 
@@ -13,9 +14,11 @@ export class AuthenticationInterceptor implements HttpInterceptor {
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService) {
+  }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // add authorization header with auth token if available
     const token = this.authenticationService.getAuthToken();
     if (token && !this.isRefreshing) {
@@ -24,7 +27,16 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(catchError(error => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
-        return this.handle401Error(request, next);
+        if (request.url.endsWith(AuthenticationService.AUTH_URL)) { // refresh token failed coz of expiration
+          this.authenticationService.authenticated = false;
+          this.authenticationService.removeAuthToken();
+          this.authenticationService.removeRefreshToken();
+          this.isRefreshing = false;
+          this.router.navigate(['/login']).then();
+          return throwError('refreshtoken expired');
+        } else {
+          return this.handle401Error(request, next);
+        }
       } else {
         return throwError(error);
       }

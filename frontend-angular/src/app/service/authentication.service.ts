@@ -12,7 +12,7 @@ import { ApiService } from './api.service';
 export class AuthenticationService {
 
   private static OAUTH_ENDPOINT = 'http://localhost:8080/oauth1';
-  private static AUTH_URL = '/token';
+  public static AUTH_URL = '/token';
   private static CLIENT_ID = 'testjwtclientid';
   private static CLIENT_SECRET = 'XY7kmzoNzl100';
   private static LOGOUT_URL = '/logout';
@@ -27,6 +27,8 @@ export class AuthenticationService {
   }
 
   public login(username: string, password: string): Observable<object> {
+    this.removeAuthToken();
+    this.removeRefreshToken();
     const loginSubject: Subject<object> = new Subject<object>();
 
     const body = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&grant_type=password`;
@@ -71,6 +73,8 @@ export class AuthenticationService {
     const logOutSubject: Subject<object> = new Subject<object>();
     this.apiService.get(AuthenticationService.LOGOUT_URL, AuthenticationService.OAUTH_ENDPOINT).subscribe(() => {
       this.authenticated = false;
+      this.removeAuthToken();
+      this.removeRefreshToken();
       logOutSubject.next();
       logOutSubject.complete();
     });
@@ -90,13 +94,19 @@ export class AuthenticationService {
     return localStorage.getItem(AuthenticationService.REFRESHTOKEN_KEY);
   }
 
+  public removeRefreshToken(): void {
+    localStorage.removeItem(AuthenticationService.REFRESHTOKEN_KEY);
+  }
+
   public refreshToken(): Observable<any> {
     const body = `grant_type=refresh_token&refresh_token=` + this.getRefreshToken();
     const httpHeaders = this.getHttpHeaders();
     const options = {headers: httpHeaders};
-    return this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.AUTH_URL, body, options).pipe(tap((res: any) => {
-      this.storeTokens(res);
-    }));
+    return this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.AUTH_URL, body, options)
+      .pipe(tap((res: any) => {
+          this.storeTokens(res);
+        }
+      ));
   }
 
 }
