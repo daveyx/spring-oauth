@@ -71,7 +71,7 @@ export class AuthenticationService {
 
   public logout(): Observable<object> {
     const logOutSubject: Subject<object> = new Subject<object>();
-    this.apiService.get(AuthenticationService.LOGOUT_URL, AuthenticationService.OAUTH_ENDPOINT).subscribe(() => {
+    this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.LOGOUT_URL, this.getRefreshToken(), {}).subscribe(() => {
       this.authenticated = false;
       this.removeAuthToken();
       this.removeRefreshToken();
