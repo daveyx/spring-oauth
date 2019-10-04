@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
+import { tap } from "rxjs/operators";
 
 import { ApiService } from './api.service';
 
@@ -15,7 +16,8 @@ export class AuthenticationService {
   private static CLIENT_ID = 'testjwtclientid';
   private static CLIENT_SECRET = 'XY7kmzoNzl100';
   private static LOGOUT_URL = '/logout';
-  private static TOKEN_KEY = 'access_token';
+  private static AUTHTOKEN_KEY = 'access_token';
+  private static REFRESHTOKEN_KEY = 'refresh_token';
 
   public authenticated = false;
 
@@ -28,20 +30,15 @@ export class AuthenticationService {
     const loginSubject: Subject<object> = new Subject<object>();
 
     const body = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&grant_type=password`;
-    const httpHeaders = new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .set('Authorization', 'Basic ' + btoa(AuthenticationService.CLIENT_ID + ':' + AuthenticationService.CLIENT_SECRET));
+    const httpHeaders = this.getHttpHeaders();
 
     // console.log('Authorization', 'Basic ' + btoa(AuthenticationService.CLIENT_ID + ':' + AuthenticationService.CLIENT_SECRET));
 
     const options = {headers: httpHeaders};
 
-    this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.AUTH_URL, body, options).subscribe(res => {
+    this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.AUTH_URL, body, options).subscribe((res: any) => {
         // console.log(res);
-        if (res !== null && res.hasOwnProperty(AuthenticationService.TOKEN_KEY)) {
-          this.authenticated = true;
-          localStorage.setItem(AuthenticationService.TOKEN_KEY, res.access_token);
-        }
+        this.storeTokens(res);
         loginSubject.next();
         loginSubject.complete();
       },
@@ -52,6 +49,22 @@ export class AuthenticationService {
       });
 
     return loginSubject;
+  }
+
+  private storeTokens(jwt: any) {
+    if (jwt !== null && jwt.hasOwnProperty(AuthenticationService.AUTHTOKEN_KEY)) {
+      this.authenticated = true;
+      localStorage.setItem(AuthenticationService.AUTHTOKEN_KEY, jwt[AuthenticationService.AUTHTOKEN_KEY]);
+    }
+    if (jwt !== null && jwt.hasOwnProperty(AuthenticationService.REFRESHTOKEN_KEY)) {
+      localStorage.setItem(AuthenticationService.REFRESHTOKEN_KEY, jwt[AuthenticationService.REFRESHTOKEN_KEY]);
+    }
+  }
+
+  private getHttpHeaders(): HttpHeaders {
+    return new HttpHeaders()
+    .set('Content-Type', 'application/x-www-form-urlencoded')
+    .set('Authorization', 'Basic ' + btoa(AuthenticationService.CLIENT_ID + ':' + AuthenticationService.CLIENT_SECRET));
   }
 
   public logout(): Observable<object> {
@@ -66,11 +79,24 @@ export class AuthenticationService {
   }
 
   public getAuthToken(): string {
-    return localStorage.getItem(AuthenticationService.TOKEN_KEY);
+    return localStorage.getItem(AuthenticationService.AUTHTOKEN_KEY);
   }
 
   public removeAuthToken(): void {
-    localStorage.removeItem(AuthenticationService.TOKEN_KEY);
+    localStorage.removeItem(AuthenticationService.AUTHTOKEN_KEY);
+  }
+
+  private getRefreshToken(): string {
+    return localStorage.getItem(AuthenticationService.REFRESHTOKEN_KEY);
+  }
+
+  public refreshToken(): Observable<any> {
+    const body = `grant_type=refresh_token&refresh_token=` + this.getRefreshToken();
+    const httpHeaders = this.getHttpHeaders();
+    const options = {headers: httpHeaders};
+    return this.apiService.post(AuthenticationService.OAUTH_ENDPOINT + AuthenticationService.AUTH_URL, body, options).pipe(tap((res: any) => {
+      this.storeTokens(res);
+    }));
   }
 
 }

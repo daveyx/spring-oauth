@@ -6,7 +6,7 @@
         <div class="row">
           <div class="col-xs-12">
             <h1>
-              Welcome to {{ title }}!
+              Welcome to OAuthDemo!
             </h1>
             <img width="100" alt="Angular Logo"
                  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="/>
@@ -14,11 +14,19 @@
         </div>
       </div>
       <div [hidden]="authenticated()">
-        Public resource: {{greeting.content}}
+        Public resource: {{greeting?.content}}
       </div>
-      <div [hidden]="!authenticated()">
-        <p>The ID is {{greeting.id}}</p>
-        <p>The content is {{greeting.content}}</p>
+      <div [hidden]="!authenticated()" *ngIf="greeting">
+        <p>The ID is {{greeting?.id}}</p>
+        <p>The content is {{greeting?.content}}</p>
+        <p>The serverTime is {{greeting?.serverTime}}</p>
+        <button type="button" class="btn btn-primary" (click)="onRefresh()">Refresh</button>
+      </div>
+      <div [hidden]="!authenticated()" *ngIf="greeting2">
+        <hr />
+        <p>The ID2 is {{greeting2?.id}}</p>
+        <p>The content2 is {{greeting2?.content}}</p>
+        <p>The serverTime2 is {{greeting2?.serverTime}}</p>
       </div>
       <div [hidden]="authenticated()">
         <p>Login to see your greeting!</p>

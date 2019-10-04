@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthenticationService } from './service/authentication.service';
 import { ApiService } from './service/api.service';
 
+
 @Injectable()
 export class AppService {
 
@@ -18,4 +19,11 @@ export class AppService {
       return this.apiService.get('/public-resource');
     }
   }
+
+  public getResource2(): Observable<object> {
+    if (this.authenticationService.authenticated) {
+      return this.apiService.get('/resource2');
+    }
+  }
+
 }

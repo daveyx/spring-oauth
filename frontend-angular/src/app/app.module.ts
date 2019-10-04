@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AppService } from './app.service';
-import { ErrorInterceptor } from './interceptor/error.interceptor';
 import { AuthenticationInterceptor } from './interceptor/authentication.interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginLayoutComponent } from './components/login-layout/login-layout.component';
@@ -46,11 +45,6 @@ const routes: Routes = [
     AppRoutingModule
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorInterceptor,
-      multi: true
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthenticationInterceptor,
