@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -75,7 +77,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorizedGrantTypes(grantType, "refresh_token")
                 .scopes(scopeRead, scopeWrite)
                 .resourceIds(resourceIds)
-                .accessTokenValiditySeconds(120)
+                .accessTokenValiditySeconds(30)
                 .refreshTokenValiditySeconds(14400); // 14400s = 4h
     }
 
@@ -101,7 +103,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+        JwtTokenStore jwtTokenStore = new JwtTokenStore(accessTokenConverter());
+        jwtTokenStore.setApprovalStore(approvalStore(jwtTokenStore));
+        return jwtTokenStore;
     }
 
     @Bean
@@ -114,4 +118,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return defaultTokenServices;
     }
 
+    private ApprovalStore approvalStore(TokenStore tokenStore) {
+        TokenApprovalStore store = new TokenApprovalStore();
+        store.setTokenStore(tokenStore);
+        return store;
+    }
 }
