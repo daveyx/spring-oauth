@@ -17,11 +17,11 @@ export class HomeComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService, private appService: AppService) {
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.getData();
   }
 
-  authenticated() {
+  public authenticated() {
     return this.authenticationService.authenticated;
   }
 
