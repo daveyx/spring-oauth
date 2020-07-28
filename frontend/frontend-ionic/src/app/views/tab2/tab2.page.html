@@ -7,11 +7,21 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tab 2</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <div [hidden]="authenticated()">
+    NOT authenticated
+  </div>
+
+  <div [hidden]="!authenticated()">
+    Public resource: {{ greeting?.content }}
+  </div>
+
+  <ion-button (click)="doAction()">Default</ion-button>
+
 </ion-content>
