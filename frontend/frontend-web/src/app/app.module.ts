@@ -12,6 +12,8 @@ import { AuthenticationInterceptor } from './interceptor/authentication.intercep
 import { AppRoutingModule } from './app-routing.module';
 import { LoginLayoutComponent } from './components/login-layout/login-layout.component';
 import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
+import { SharedModule } from './shared/shared.module';
+
 
 const routes: Routes = [
   {
@@ -42,7 +44,8 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SharedModule
   ],
   providers: [
     {

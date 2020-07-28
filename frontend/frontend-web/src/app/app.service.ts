@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { AuthenticationService } from './service/authentication.service';
-import { ApiService } from './service/api.service';
+import { AuthenticationService } from './shared/service/authentication.service';
+import { ApiService } from './shared/service/api.service';
 
 
 @Injectable()
