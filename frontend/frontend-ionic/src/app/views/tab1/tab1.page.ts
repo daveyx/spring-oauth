@@ -18,7 +18,7 @@ export class Tab1Page {
 
     public login(form) {
         this.authService.login(form.value.email, form.value.password).subscribe((res) => {
-            this.router.navigateByUrl('home').then();
+            this.router.navigateByUrl('tabs/tab2').then();
         });
     }
 
