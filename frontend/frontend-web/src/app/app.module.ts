@@ -5,8 +5,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './views/home/home.component';
+import { LoginComponent } from './views/login/login.component';
 import { AppService } from './app.service';
 import { AuthenticationInterceptor } from './interceptor/authentication.interceptor';
 import { AppRoutingModule } from './app-routing.module';
