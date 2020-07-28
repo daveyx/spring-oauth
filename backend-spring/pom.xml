@@ -85,7 +85,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <spring.boot.mainclass>com.example.oauthdemo.OauthdemoApplication</spring.boot.mainclass>
+                <spring.boot.mainclass>com.example.oauthdemo.OAuthDemoApplication</spring.boot.mainclass>
             </properties>
         </profile>
         <profile>
@@ -94,7 +94,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <spring.boot.mainclass>com.example.oauthdemo.OauthdemoApplication2</spring.boot.mainclass>
+                <spring.boot.mainclass>com.example.oauthdemo.OAuthDemoApplication2</spring.boot.mainclass>
             </properties>
         </profile>
     </profiles>

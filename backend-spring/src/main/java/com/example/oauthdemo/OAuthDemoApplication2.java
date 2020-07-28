@@ -1,6 +1,6 @@
 package com.example.oauthdemo;
 
-import com.example.oauthdemo.security.config1.SecurityConfig1Filter;
+import com.example.oauthdemo.security.config2.SecurityConfig2Filter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter;
@@ -16,11 +16,11 @@ import org.springframework.context.annotation.FilterType;
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
                 @ComponentScan.Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class),
-                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = SecurityConfig1Filter.class)
+                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = SecurityConfig2Filter.class)
         })
-public class OauthdemoApplication {
+public class OAuthDemoApplication2 {
     public static void main(String[] args) {
-        SpringApplication.run(OauthdemoApplication.class, args);
+        SpringApplication.run(OAuthDemoApplication2.class, args);
     }
 }
 
