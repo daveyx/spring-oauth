@@ -17,10 +17,9 @@ export class Tab1Page {
     }
 
     public login(form) {
-        console.log('-->');
-        // this.authService.login(form.value).subscribe((res) => {
-        //     this.router.navigateByUrl('home');
-        // });
+        this.authService.login(form.value.email, form.value.password).subscribe((res) => {
+            this.router.navigateByUrl('home').then();
+        });
     }
 
 }
