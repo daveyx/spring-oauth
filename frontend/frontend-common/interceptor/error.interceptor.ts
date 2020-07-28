@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from "@angular/router";
 
-import { AuthenticationService } from '../shared/service/authentication.service';
+import { AuthenticationService } from '../service/authentication.service';
 
 
 @Injectable()

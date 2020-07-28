@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
 import { AppService } from './shared/service/app.service';
-import { AuthenticationInterceptor } from './interceptor/authentication.interceptor';
+import { AuthenticationInterceptor } from './shared/interceptor/authentication.interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginLayoutComponent } from './components/login-layout/login-layout.component';
 import { BaseLayoutComponent } from './components/base-layout/base-layout.component';
