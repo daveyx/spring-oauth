@@ -10,14 +10,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 
-@SpringBootConfiguration
-@EnableAutoConfiguration
-@ComponentScan(
-        excludeFilters = {
-                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
-                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class),
-                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = SecurityConfig2Filter.class)
-        })
+//@SpringBootConfiguration
+//@EnableAutoConfiguration
+//@ComponentScan(
+//        excludeFilters = {
+//                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),
+//                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class),
+//                @ComponentScan.Filter(type = FilterType.CUSTOM, classes = SecurityConfig2Filter.class)
+//        })
 public class OAuthDemoApplication2 {
     public static void main(String[] args) {
         SpringApplication.run(OAuthDemoApplication2.class, args);
