@@ -1,6 +1,5 @@
 package com.example.oauthdemo.security.config1;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,23 +47,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.signing-key}")
     private String signingKey;
 
-    @Autowired
-    private TokenStore tokenStore;
+    private final TokenStore tokenStore;
 
-    @Autowired
-    private JwtAccessTokenConverter accessTokenConverter;
+    private final JwtAccessTokenConverter accessTokenConverter;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final UserDetailsService userDetailsService;
 
-    public AuthorizationServerConfig(MyUserDetailsService myUserDetailsService) {
+    public AuthorizationServerConfig(TokenStore tokenStore,
+                                     JwtAccessTokenConverter accessTokenConverter,
+                                     AuthenticationManager authenticationManager,
+                                     PasswordEncoder passwordEncoder,
+                                     MyUserDetailsService myUserDetailsService) {
+        this.tokenStore = tokenStore;
+        this.accessTokenConverter = accessTokenConverter;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
         userDetailsService = myUserDetailsService;
     }
 
@@ -123,4 +126,5 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         store.setTokenStore(tokenStore);
         return store;
     }
+
 }
