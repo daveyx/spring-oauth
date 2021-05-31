@@ -16,7 +16,7 @@ public class LogoutController {
     private TokenStore tokenStore;
 
 
-    @RequestMapping(value = "/oauth1/logout", method = RequestMethod.POST)
+    @RequestMapping(value = "/oauth/logout", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void logout(final HttpServletRequest request,
                        @RequestBody String refreshToken) {

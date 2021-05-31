@@ -11,7 +11,7 @@ import { ApiService } from './api.service';
 })
 export class AuthenticationService {
 
-  private static OAUTH_ENDPOINT = 'http://localhost:8080/oauth1';
+  private static OAUTH_ENDPOINT = 'http://localhost:8080/oauth';
   public static AUTH_URL = '/token';
   private static CLIENT_ID = 'testjwtclientid';
   private static CLIENT_SECRET = 'XY7kmzoNzl100';

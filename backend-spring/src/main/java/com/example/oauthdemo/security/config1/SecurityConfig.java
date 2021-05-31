@@ -57,8 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http    .antMatcher("/oauth1/**")
-                .requestMatchers().antMatchers("/oauth1/**")
+        http    .antMatcher("/oauth/**")
+                .requestMatchers().antMatchers("/oauth/**")
                 .and().httpBasic()
                 .and()
                 .sessionManagement()
