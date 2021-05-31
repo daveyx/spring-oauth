@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
 @Configuration
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -55,4 +56,5 @@ public class MyUserDetailsService implements UserDetailsService {
             }
         };
     }
+
 }

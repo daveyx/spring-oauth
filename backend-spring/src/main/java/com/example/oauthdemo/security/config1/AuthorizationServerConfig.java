@@ -1,5 +1,6 @@
 package com.example.oauthdemo.security.config1;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,29 +48,23 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.signing-key}")
     private String signingKey;
 
-    private final TokenStore tokenStore;
+    @Autowired
+    private TokenStore tokenStore;
 
-    private final JwtAccessTokenConverter accessTokenConverter;
+    @Autowired
+    private JwtAccessTokenConverter accessTokenConverter;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    private final AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    private final UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-    public AuthorizationServerConfig(TokenStore tokenStore,
-                                     JwtAccessTokenConverter accessTokenConverter,
-                                     AuthenticationManager authenticationManager,
-                                     PasswordEncoder passwordEncoder,
-                                     MyUserDetailsService myUserDetailsService) {
-        this.tokenStore = tokenStore;
-        this.accessTokenConverter = accessTokenConverter;
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-        userDetailsService = myUserDetailsService;
-    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
