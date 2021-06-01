@@ -82,16 +82,12 @@
                 <configuration>
                     <executable>true</executable>
                     <addResources>true</addResources>
-                    <mainClass>${spring.boot.mainclass}</mainClass>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                        <configuration>
-                            <mainClass>${spring.boot.mainclass}</mainClass>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
