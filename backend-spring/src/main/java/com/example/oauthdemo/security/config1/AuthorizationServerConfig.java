@@ -2,9 +2,7 @@ package com.example.oauthdemo.security.config1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,13 +10,9 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-import org.springframework.security.oauth2.provider.approval.ApprovalStore;
-import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import java.util.Arrays;
 
@@ -90,36 +84,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .pathMapping("/oauth/token", "/oauth/token")
                 .pathMapping("/oauth/authorize", "/oauth/authorize")
                 .userDetailsService(userDetailsService); // <-- this is mandatory for refresh_token
-    }
-
-    @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(signingKey);
-        return converter;
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        JwtTokenStore jwtTokenStore = new JwtTokenStore(accessTokenConverter());
-        jwtTokenStore.setApprovalStore(approvalStore(jwtTokenStore));
-        return jwtTokenStore;
-    }
-
-    @Bean
-    @Primary
-    //Making this primary to avoid any accidental duplication with another token service instance of the same name
-    public DefaultTokenServices tokenServices() {
-        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore());
-        defaultTokenServices.setSupportRefreshToken(true);
-        return defaultTokenServices;
-    }
-
-    private ApprovalStore approvalStore(TokenStore tokenStore) {
-        TokenApprovalStore store = new TokenApprovalStore();
-        store.setTokenStore(tokenStore);
-        return store;
     }
 
 }
