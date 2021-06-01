@@ -34,10 +34,13 @@ public class Controller {
 
     @RequestMapping("/api1/public-resource")
     @CrossOrigin(origins = "*")
-    public Map<String, Object> publicHome() {
-        final Map<String, Object> model = new HashMap<>();
+    public Map<String, String> publicHome() {
+        return getPublicContent();
+    }
+
+    public static Map<String, String> getPublicContent() {
+        final Map<String, String> model = new HashMap<>();
         model.put("content", "Hello unsecured World");
         return model;
     }
-
 }
