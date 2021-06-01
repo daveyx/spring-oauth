@@ -98,25 +98,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>config1</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <spring.boot.mainclass>com.example.oauthdemo.OAuthDemoApplication</spring.boot.mainclass>
-            </properties>
-        </profile>
-        <profile>
-            <id>config2</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <spring.boot.mainclass>com.example.oauthdemo.OAuthDemoApplication2</spring.boot.mainclass>
-            </properties>
-        </profile>
-    </profiles>
-
 </project>
