@@ -14,22 +14,14 @@ public class Controller {
 
     @RequestMapping("/api1/resource")
     @CrossOrigin(origins = "*")
-    public Map<String, Object> resource() {
-        final Map<String, Object> model = new HashMap<>();
-        model.put("id", UUID.randomUUID().toString());
-        model.put("content", "Hello Secured World 1 from resource1");
-        model.put("serverTime", LocalDateTime.now().toString());
-        return model;
+    public Map<String, String> resource() {
+        return getSecuredContent(1);
     }
 
     @RequestMapping("/api1/resource2")
     @CrossOrigin(origins = "*")
-    public Map<String, Object> resource2() {
-        final Map<String, Object> model = new HashMap<>();
-        model.put("id", UUID.randomUUID().toString());
-        model.put("content", "Hello Secured World 1 from resource2");
-        model.put("serverTime", LocalDateTime.now().toString());
-        return model;
+    public Map<String, String> resource2() {
+        return getSecuredContent(2);
     }
 
     @RequestMapping("/api1/public-resource")
@@ -43,4 +35,14 @@ public class Controller {
         model.put("content", "Hello unsecured World");
         return model;
     }
+
+    public static Map<String, String> getSecuredContent(int resource) {
+        final Map<String, String> model = new HashMap<>();
+        model.put("id", UUID.randomUUID().toString());
+        model.put("content", "Hello Secured World from resource" + resource);
+        model.put("serverTime", LocalDateTime.now().toString());
+
+        return model;
+    }
+
 }
