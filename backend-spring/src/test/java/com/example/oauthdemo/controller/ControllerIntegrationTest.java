@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,7 +54,14 @@ public class ControllerIntegrationTest {
     }
 
     @Test
-    public void test_resource() throws Exception {
+    public void test_resource_notAuthenticated() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/api1/resource")).andReturn();
+
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    public void test_resource_authenticated() throws Exception {
         JSONObject token = new JSONObject(OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret));
 
         MvcResult mvcResult = mockMvc.perform(get("/api1/resource")
