@@ -40,14 +40,4 @@ public class Controller {
         return model;
     }
 
-    @RequestMapping("/api2/resource")
-    @CrossOrigin(origins = "*")
-    public Map<String, Object> home2() {
-        final Map<String, Object> model = new HashMap<>();
-        model.put("id", UUID.randomUUID().toString());
-        model.put("content", "Hello Secured World 2");
-        model.put("serverTime", LocalDateTime.now().toString());
-        return model;
-    }
-
 }
