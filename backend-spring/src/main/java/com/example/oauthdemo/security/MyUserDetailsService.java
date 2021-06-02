@@ -1,4 +1,4 @@
-package com.example.oauthdemo.security.config1;
+package com.example.oauthdemo.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.GrantedAuthority;

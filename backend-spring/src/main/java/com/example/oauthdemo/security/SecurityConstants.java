@@ -1,4 +1,4 @@
-package com.example.oauthdemo.security.common;
+package com.example.oauthdemo.security;
 
 public abstract class SecurityConstants {
 
