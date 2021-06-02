@@ -40,6 +40,13 @@ public class OAuthControllerIntegrationTest {
 
     @Test
     public void test_obtainToken() throws Exception {
+        String token = getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
+
+        JacksonJsonParser jsonParser = new JacksonJsonParser();
+        assertNotNull(jsonParser.parseMap(token).get("access_token").toString());
+    }
+
+    public static String getToken(MockMvc mockMvc, String oauthTokenEndpoint, String clientId, String clientSecret) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "password");
         params.add("client_id", clientId);
@@ -54,10 +61,7 @@ public class OAuthControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
 
-        String resultString = result.andReturn().getResponse().getContentAsString();
-
-        JacksonJsonParser jsonParser = new JacksonJsonParser();
-        assertNotNull(jsonParser.parseMap(resultString).get("access_token").toString());
+        return result.andReturn().getResponse().getContentAsString();
     }
 
 }
