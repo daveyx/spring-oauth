@@ -46,7 +46,7 @@ public class ControllerIntegrationTest {
 
     @Test
     public void test_publicHome() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/api1/public-resource")).andReturn();
+        MvcResult mvcResult = mockMvc.perform(get("/api/public-resource")).andReturn();
         MockHttpServletResponse mockHttpServletResponse = mvcResult.getResponse();
         String actual = mockHttpServletResponse.getContentAsString();
 
@@ -55,7 +55,7 @@ public class ControllerIntegrationTest {
 
     @Test
     public void test_resource_notAuthenticated() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/api1/resource")).andReturn();
+        MvcResult mvcResult = mockMvc.perform(get("/api/resource")).andReturn();
 
         assertEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
     }
@@ -64,7 +64,7 @@ public class ControllerIntegrationTest {
     public void test_resource_authenticated() throws Exception {
         JSONObject token = new JSONObject(OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret));
 
-        MvcResult mvcResult = mockMvc.perform(get("/api1/resource")
+        MvcResult mvcResult = mockMvc.perform(get("/api/resource")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getString("access_token")))
                 .andExpect(status().isOk()).andReturn();
 

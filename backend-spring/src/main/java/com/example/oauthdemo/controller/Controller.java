@@ -12,19 +12,19 @@ import java.util.UUID;
 @RestController
 public class Controller {
 
-    @RequestMapping("/api1/resource")
+    @RequestMapping("/api/resource")
     @CrossOrigin(origins = "*")
     public Map<String, String> resource() {
         return getSecuredContent(1);
     }
 
-    @RequestMapping("/api1/resource2")
+    @RequestMapping("/api/resource2")
     @CrossOrigin(origins = "*")
     public Map<String, String> resource2() {
         return getSecuredContent(2);
     }
 
-    @RequestMapping("/api1/public-resource")
+    @RequestMapping("/api/public-resource")
     @CrossOrigin(origins = "*")
     public Map<String, String> publicHome() {
         return getPublicContent();
