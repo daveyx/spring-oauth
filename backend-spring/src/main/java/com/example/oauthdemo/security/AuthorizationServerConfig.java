@@ -89,8 +89,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenConverter(jwtAccessTokenConverter)
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(authenticationManager)
-                .pathMapping("/oauth/token", "/oauth/token")
-                .pathMapping("/oauth/authorize", "/oauth/authorize")
+//                optional path mapping:
+//                .pathMapping("/oauth/token", "/oauth1/token")
+//                .pathMapping("/oauth/authorize", "/oauth1/authorize")
                 .userDetailsService(userDetailsService); // <-- this is mandatory for refresh_token
     }
 

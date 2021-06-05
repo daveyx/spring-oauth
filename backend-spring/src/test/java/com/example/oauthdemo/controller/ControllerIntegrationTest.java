@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.security.oauth2.common.OAuth2AccessToken.BEARER_TYPE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -66,7 +67,7 @@ public class ControllerIntegrationTest {
         JSONObject token = new JSONObject(OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret));
 
         MvcResult mvcResult = mockMvc.perform(get("/api/resource")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getString(OAuth2AccessToken.ACCESS_TOKEN)))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + token.getString(OAuth2AccessToken.ACCESS_TOKEN)))
                 .andExpect(status().isOk()).andReturn();
 
         MockHttpServletResponse mockHttpServletResponse = mvcResult.getResponse();

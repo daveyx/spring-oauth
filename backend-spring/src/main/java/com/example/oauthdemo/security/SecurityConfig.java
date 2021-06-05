@@ -50,14 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(this.userDetailsService)
+        auth.userDetailsService(this.userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http    .antMatcher("/oauth/**")
+        http.antMatcher("/oauth/**")
                 .requestMatchers().antMatchers("/oauth/**")
                 .and().httpBasic()
                 .and()
@@ -90,4 +89,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
+
 }
