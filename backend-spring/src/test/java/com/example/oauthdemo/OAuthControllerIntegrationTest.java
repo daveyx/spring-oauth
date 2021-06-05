@@ -1,5 +1,6 @@
 package com.example.oauthdemo;
 
+import com.example.oauthdemo.security.TokenEnhancer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +8,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -42,8 +46,9 @@ public class OAuthControllerIntegrationTest {
     public void test_obtainToken() throws Exception {
         String token = getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
 
-        JacksonJsonParser jsonParser = new JacksonJsonParser();
-        assertNotNull(jsonParser.parseMap(token).get("access_token").toString());
+        Map<String, Object> tokenMap = new JacksonJsonParser().parseMap(token);
+        assertNotNull(tokenMap.get(OAuth2AccessToken.ACCESS_TOKEN).toString());
+        assertNotNull(tokenMap.get(TokenEnhancer.USER_ID_KEY).toString());
     }
 
     public static String getToken(MockMvc mockMvc, String oauthTokenEndpoint, String clientId, String clientSecret) throws Exception {

@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 
 import java.util.Arrays;
 
+import static org.springframework.security.oauth2.common.OAuth2AccessToken.REFRESH_TOKEN;
+
 
 @Configuration
 @EnableAuthorizationServer
@@ -45,9 +47,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private TokenStore tokenStore;
 
-    @Autowired
-    private JwtAccessTokenConverter accessTokenConverter;
-
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -59,6 +58,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private UserDetailsService userDetailsService;
 
+    private final TokenEnhancer tokenEnhancer;
+
+    private final JwtAccessTokenConverter jwtAccessTokenConverter;
+
+
+    public AuthorizationServerConfig(TokenEnhancer tokenEnhancer, JwtAccessTokenConverter jwtAccessTokenConverter) {
+        this.tokenEnhancer = tokenEnhancer;
+        this.jwtAccessTokenConverter = jwtAccessTokenConverter;
+    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
@@ -66,7 +74,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .inMemory()
                 .withClient(clientId)
                 .secret(passwordEncoder.encode(clientSecret))
-                .authorizedGrantTypes(grantType, "refresh_token")
+                .authorizedGrantTypes(grantType, REFRESH_TOKEN)
                 .scopes(scopeRead, scopeWrite)
                 .resourceIds(resourceIds)
                 .accessTokenValiditySeconds(30)
@@ -76,9 +84,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
-        enhancerChain.setTokenEnhancers(Arrays.asList(accessTokenConverter));
+        enhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer, jwtAccessTokenConverter));
         endpoints.tokenStore(tokenStore)
-                .accessTokenConverter(accessTokenConverter)
+                .accessTokenConverter(jwtAccessTokenConverter)
                 .tokenEnhancer(enhancerChain)
                 .authenticationManager(authenticationManager)
                 .pathMapping("/oauth/token", "/oauth/token")

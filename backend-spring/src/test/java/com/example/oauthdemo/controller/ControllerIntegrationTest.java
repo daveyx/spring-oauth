@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -65,7 +66,7 @@ public class ControllerIntegrationTest {
         JSONObject token = new JSONObject(OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret));
 
         MvcResult mvcResult = mockMvc.perform(get("/api/resource")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getString("access_token")))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token.getString(OAuth2AccessToken.ACCESS_TOKEN)))
                 .andExpect(status().isOk()).andReturn();
 
         MockHttpServletResponse mockHttpServletResponse = mvcResult.getResponse();
