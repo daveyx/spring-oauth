@@ -30,6 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${security.encoding-strength}")
     private Integer encodingStrength;
 
+    @Value("${security.allowed-origins}")
+    private String allowedOrigins;
+
     private final UserDetailsService userDetailsService;
 
 
@@ -80,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin(allowedOrigins);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
