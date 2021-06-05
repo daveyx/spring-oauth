@@ -44,6 +44,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.signing-key}")
     private String signingKey;
 
+    @Value("${security.accessTokenValidity}")
+    private int accessTokenValidity;
+
+    @Value("${security.refreshTokenValidity}")
+    private int refreshTokenValidity;
+
     @Autowired
     private TokenStore tokenStore;
 
@@ -77,8 +83,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorizedGrantTypes(grantType, REFRESH_TOKEN)
                 .scopes(scopeRead, scopeWrite)
                 .resourceIds(resourceIds)
-                .accessTokenValiditySeconds(30)
-                .refreshTokenValiditySeconds(14400); // 14400s = 4h
+                .accessTokenValiditySeconds(accessTokenValidity)
+                .refreshTokenValiditySeconds(refreshTokenValidity);
     }
 
     @Override

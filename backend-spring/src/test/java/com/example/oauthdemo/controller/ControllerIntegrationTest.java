@@ -71,6 +71,8 @@ public class ControllerIntegrationTest {
                 .andExpect(status().isOk()).andReturn();
 
         MockHttpServletResponse mockHttpServletResponse = mvcResult.getResponse();
+
+        @SuppressWarnings("unchecked")
         Map<String, String> actual = objectMapper.readValue(mockHttpServletResponse.getContentAsString(), Map.class);
 
         Map<String, String> expected = Controller.getSecuredContent(1);
