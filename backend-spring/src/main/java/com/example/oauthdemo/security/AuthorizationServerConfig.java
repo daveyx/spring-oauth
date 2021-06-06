@@ -1,6 +1,5 @@
 package com.example.oauthdemo.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,26 +49,29 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.refreshTokenValidity}")
     private int refreshTokenValidity;
 
-    @Autowired
-    private TokenStore tokenStore;
+    private final TokenStore tokenStore;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     private final TokenEnhancer tokenEnhancer;
 
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
 
 
-    public AuthorizationServerConfig(TokenEnhancer tokenEnhancer, JwtAccessTokenConverter jwtAccessTokenConverter) {
+    public AuthorizationServerConfig(TokenStore tokenStore,
+                                     AuthenticationManager authenticationManager,
+                                     PasswordEncoder passwordEncoder,
+                                     UserDetailsService userDetailsService,
+                                     TokenEnhancer tokenEnhancer,
+                                     JwtAccessTokenConverter jwtAccessTokenConverter) {
+        this.tokenStore = tokenStore;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
         this.tokenEnhancer = tokenEnhancer;
         this.jwtAccessTokenConverter = jwtAccessTokenConverter;
     }
