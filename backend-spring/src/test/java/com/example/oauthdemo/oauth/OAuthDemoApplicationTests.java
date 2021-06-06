@@ -1,4 +1,4 @@
-package com.example.oauthdemo;
+package com.example.oauthdemo.oauth;
 
 import org.junit.Ignore;
 import org.junit.Test;

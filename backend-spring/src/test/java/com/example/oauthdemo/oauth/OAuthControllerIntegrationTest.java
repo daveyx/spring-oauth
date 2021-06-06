@@ -1,4 +1,4 @@
-package com.example.oauthdemo;
+package com.example.oauthdemo.oauth;
 
 import com.example.oauthdemo.security.TokenEnhancer;
 import org.junit.Test;
@@ -35,10 +35,10 @@ public class OAuthControllerIntegrationTest {
     @Value("${security.oauth.endpoint}")
     private String oauthTokenEndpoint;
 
-    @Value("${security.jwt.client-id}")
+    @Value("${security.client-id}")
     private String clientId;
 
-    @Value("${security.jwt.client-secret}")
+    @Value("${security.client-secret}")
     private String clientSecret;
 
 

@@ -1,6 +1,6 @@
 package com.example.oauthdemo.controller;
 
-import com.example.oauthdemo.OAuthControllerIntegrationTest;
+import com.example.oauthdemo.oauth.OAuthControllerIntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -39,10 +39,10 @@ public class ControllerIntegrationTest {
     @Value("${security.oauth.endpoint}")
     private String oauthTokenEndpoint;
 
-    @Value("${security.jwt.client-id}")
+    @Value("${security.client-id}")
     private String clientId;
 
-    @Value("${security.jwt.client-secret}")
+    @Value("${security.client-secret}")
     private String clientSecret;
 
 
