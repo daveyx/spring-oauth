@@ -64,7 +64,7 @@ public class ControllerIntegrationTest {
 
     @Test
     public void test_resource_authenticated() throws Exception {
-        JSONObject token = new JSONObject(OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret));
+        JSONObject token = OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/resource")
                 .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + token.getString(OAuth2AccessToken.ACCESS_TOKEN)))
