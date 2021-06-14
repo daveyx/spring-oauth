@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+import java.util.Objects;
+
 
 @Configuration
 public class TokenStoreConfig {
@@ -38,7 +40,7 @@ public class TokenStoreConfig {
 
     @Bean
     public TokenStore tokenStore() {
-        return new JdbcTokenStore(jdbcTemplate.getDataSource());
+        return new JdbcTokenStore(Objects.requireNonNull(jdbcTemplate.getDataSource()));
     }
 
     @Bean
