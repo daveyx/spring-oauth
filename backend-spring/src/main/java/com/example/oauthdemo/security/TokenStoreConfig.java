@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.provider.approval.ApprovalStore;
-import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 
 @Configuration
@@ -19,10 +18,14 @@ public class TokenStoreConfig {
     @Value("${security.signing-key}")
     private String signingKey;
 
+    private final JdbcTemplate jdbcTemplate;
+
     private final UserDetailsService userDetailsService;
 
 
-    public TokenStoreConfig(UserDetailsService userDetailsService) {
+    public TokenStoreConfig(JdbcTemplate jdbcTemplate,
+                            UserDetailsService userDetailsService) {
+        this.jdbcTemplate = jdbcTemplate;
         this.userDetailsService = userDetailsService;
     }
 
@@ -35,9 +38,7 @@ public class TokenStoreConfig {
 
     @Bean
     public TokenStore tokenStore() {
-        JwtTokenStore jwtTokenStore = new JwtTokenStore(accessTokenConverter());
-        jwtTokenStore.setApprovalStore(approvalStore(jwtTokenStore));
-        return jwtTokenStore;
+        return new JdbcTokenStore(jdbcTemplate.getDataSource());
     }
 
     @Bean
@@ -48,12 +49,6 @@ public class TokenStoreConfig {
         defaultTokenServices.setTokenStore(tokenStore());
         defaultTokenServices.setSupportRefreshToken(true);
         return defaultTokenServices;
-    }
-
-    private ApprovalStore approvalStore(TokenStore tokenStore) {
-        TokenApprovalStore store = new TokenApprovalStore();
-        store.setTokenStore(tokenStore);
-        return store;
     }
 
 }

@@ -1,6 +1,6 @@
 package com.example.oauthdemo.controller;
 
-import com.example.oauthdemo.oauth.OAuthControllerIntegrationTest;
+import com.example.oauthdemo.oauth.AccessTokenControllerIntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -64,7 +64,7 @@ public class ControllerIntegrationTest {
 
     @Test
     public void test_resource_authenticated() throws Exception {
-        JSONObject token = OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
+        JSONObject token = AccessTokenControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/resource")
                 .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + token.getString(OAuth2AccessToken.ACCESS_TOKEN)))

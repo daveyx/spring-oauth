@@ -1,7 +1,6 @@
 package com.example.oauthdemo.oauth;
 
 import org.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.security.oauth2.common.OAuth2AccessToken.BEARER_TYPE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,7 +57,7 @@ public class RefreshTokenControllerIntegrationTest {
 
 	@Test
 	public void test_expiredAuthToken() throws Exception {
-        JSONObject token = OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
+        JSONObject token = AccessTokenControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
 
         Thread.sleep(1000);
 
@@ -73,17 +71,26 @@ public class RefreshTokenControllerIntegrationTest {
 
         assertTrue(actual.has("error"));
         assertTrue(actual.has("error_description"));
-        assertTrue("invalid_token".equals(actual.getString("error")));
+        assertEquals("invalid_token", actual.getString("error"));
         assertTrue(actual.getString("error_description").startsWith("Access token expired"));
 	}
 
-	@Ignore
 	@Test
-	public void test_newAuthToken() throws Exception {
-        JSONObject token = OAuthControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
+	public void test_newAuthTokenValid() throws Exception {
+        JSONObject token = AccessTokenControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
+        JSONObject newToken = refreshToken(token);
 
-        Thread.sleep(1000);
+        assertNotEquals(token.get(OAuth2AccessToken.ACCESS_TOKEN), newToken.get(OAuth2AccessToken.ACCESS_TOKEN));
 
+        mockMvc.perform(get("/api/resource")
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + newToken.getString(OAuth2AccessToken.ACCESS_TOKEN)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
+    private JSONObject refreshToken(JSONObject token) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", OAuth2AccessToken.REFRESH_TOKEN);
         params.add(OAuth2AccessToken.REFRESH_TOKEN, token.getString(OAuth2AccessToken.REFRESH_TOKEN));
@@ -96,11 +103,8 @@ public class RefreshTokenControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
 
-        JSONObject actual = new JSONObject(resultActions.andReturn().getResponse().getContentAsString());
-
-        System.out.println("asdf");
+        return new JSONObject(resultActions.andReturn().getResponse().getContentAsString());
     }
-
 
 }
 
