@@ -9,11 +9,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-
-import java.util.Arrays;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 
 import static org.springframework.security.oauth2.common.OAuth2AccessToken.REFRESH_TOKEN;
 
@@ -40,40 +36,23 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Value("${security.resource-ids}")
     private String resourceIds;
 
-    @Value("${security.signing-key}")
-    private String signingKey;
-
-    @Value("${security.accessTokenValidity}")
-    private int accessTokenValidity;
-
-    @Value("${security.refreshTokenValidity}")
-    private int refreshTokenValidity;
-
-    private final TokenStore tokenStore;
-
-    private final AuthenticationManager authenticationManager;
-
     private final PasswordEncoder passwordEncoder;
 
     private final UserDetailsService userDetailsService;
 
-    private final TokenEnhancer tokenEnhancer;
+    private final DefaultTokenServices defaultTokenServices;
 
-    private final JwtAccessTokenConverter jwtAccessTokenConverter;
+    private final AuthenticationManager authenticationManager;
 
 
-    public AuthorizationServerConfig(TokenStore tokenStore,
-                                     AuthenticationManager authenticationManager,
-                                     PasswordEncoder passwordEncoder,
+    public AuthorizationServerConfig(PasswordEncoder passwordEncoder,
                                      UserDetailsService userDetailsService,
-                                     TokenEnhancer tokenEnhancer,
-                                     JwtAccessTokenConverter jwtAccessTokenConverter) {
-        this.tokenStore = tokenStore;
-        this.authenticationManager = authenticationManager;
+                                     DefaultTokenServices defaultTokenServices,
+                                     AuthenticationManager authenticationManager) {
+        this.defaultTokenServices = defaultTokenServices;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
-        this.tokenEnhancer = tokenEnhancer;
-        this.jwtAccessTokenConverter = jwtAccessTokenConverter;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -84,23 +63,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .secret(passwordEncoder.encode(clientSecret))
                 .authorizedGrantTypes(grantType, REFRESH_TOKEN)
                 .scopes(scopeRead, scopeWrite)
-                .resourceIds(resourceIds)
-                .accessTokenValiditySeconds(accessTokenValidity)
-                .refreshTokenValiditySeconds(refreshTokenValidity);
+                .resourceIds(resourceIds);
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
-        enhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer, jwtAccessTokenConverter));
-        endpoints.tokenStore(tokenStore)
-                .accessTokenConverter(jwtAccessTokenConverter)
-                .tokenEnhancer(enhancerChain)
+        endpoints
+                .tokenServices(defaultTokenServices)
                 .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService); // <-- this is mandatory for refresh_token
+
 //                optional path mapping:
 //                .pathMapping("/oauth/token", "/oauth1/token")
 //                .pathMapping("/oauth/authorize", "/oauth1/authorize")
-                .userDetailsService(userDetailsService); // <-- this is mandatory for refresh_token
     }
 
 }

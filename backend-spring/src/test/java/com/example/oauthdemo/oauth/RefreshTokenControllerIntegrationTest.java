@@ -90,6 +90,22 @@ public class RefreshTokenControllerIntegrationTest {
                 .getContentAsString();
     }
 
+	@Test
+	public void test_2ndNewAuthTokenValid() throws Exception {
+        JSONObject token = AccessTokenControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
+        JSONObject newToken = refreshToken(token);
+        assertNotEquals(token.get(OAuth2AccessToken.ACCESS_TOKEN), newToken.get(OAuth2AccessToken.ACCESS_TOKEN));
+
+        JSONObject newToken2 = refreshToken(newToken);
+
+        mockMvc.perform(get("/api/resource")
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + newToken2.getString(OAuth2AccessToken.ACCESS_TOKEN)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
     private JSONObject refreshToken(JSONObject token) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", OAuth2AccessToken.REFRESH_TOKEN);
