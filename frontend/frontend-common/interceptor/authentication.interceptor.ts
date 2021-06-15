@@ -26,17 +26,19 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     }
 
     return next.handle(request).pipe(catchError(error => {
-      if (error instanceof HttpErrorResponse && error.status === 401) {
-        if (request.url.endsWith(AuthenticationService.AUTH_URL)) { // refresh token failed coz of expiration
+      if (error instanceof HttpErrorResponse && request.url.endsWith(AuthenticationService.AUTH_URL)) {
+        if (error instanceof HttpErrorResponse && error.status === 401 || error.status === 400) {
+          // 401 = refresh token expired
+          // 400 = refresh token no mappable by server
           this.authenticationService.authenticated = false;
           this.authenticationService.removeAuthToken();
           this.authenticationService.removeRefreshToken();
           this.isRefreshing = false;
           this.router.navigate(['/login']).then();
           return throwError('refreshtoken expired');
-        } else {
-          return this.handle401Error(request, next);
         }
+      } else if (error.status === 401) {
+        return this.handle401Error(request, next);
       } else {
         return throwError(error);
       }
