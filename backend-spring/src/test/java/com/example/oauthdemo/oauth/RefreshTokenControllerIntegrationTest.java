@@ -1,5 +1,6 @@
 package com.example.oauthdemo.oauth;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.util.Base64;
 
 import static org.junit.Assert.*;
 import static org.springframework.security.oauth2.common.OAuth2AccessToken.BEARER_TYPE;
@@ -92,18 +95,43 @@ public class RefreshTokenControllerIntegrationTest {
 
 	@Test
 	public void test_2ndNewAuthTokenValid() throws Exception {
-        JSONObject token = AccessTokenControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
-        JSONObject newToken = refreshToken(token);
-        assertNotEquals(token.get(OAuth2AccessToken.ACCESS_TOKEN), newToken.get(OAuth2AccessToken.ACCESS_TOKEN));
+        JSONObject resp1 = AccessTokenControllerIntegrationTest.getToken(mockMvc, oauthTokenEndpoint, clientId, clientSecret);
 
-        JSONObject newToken2 = refreshToken(newToken);
+//        long exp1 = getExpOfToken(resp1.getString("refresh_token"));
+//        long exp1a = getExpOfToken(resp1.getString("access_token"));
+//        long diff1 = exp1 - exp1a;
+
+        JSONObject resp2 = refreshToken(resp1);
+
+//        long exp2 = getExpOfToken(resp2.getString("refresh_token"));
+//        long exp2a = getExpOfToken(resp2.getString("access_token"));
+//        long diff2 = exp2 - exp2a;
+
+        assertNotEquals(resp1.get(OAuth2AccessToken.ACCESS_TOKEN), resp2.get(OAuth2AccessToken.ACCESS_TOKEN));
+
+        JSONObject resp3 = refreshToken(resp2);
+
+//        long exp3 = getExpOfToken(resp3.getString("refresh_token"));
+//        long exp3a = getExpOfToken(resp3.getString("access_token"));
+//        long diff3 = exp3 - exp3a;
 
         mockMvc.perform(get("/api/resource")
-                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + newToken2.getString(OAuth2AccessToken.ACCESS_TOKEN)))
+                .header(HttpHeaders.AUTHORIZATION, BEARER_TYPE + " " + resp3.getString(OAuth2AccessToken.ACCESS_TOKEN)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
+    }
+
+    private long getExpOfToken(String token) throws JSONException, InterruptedException {
+	    Thread.sleep(700);
+        Base64.Decoder decoder = Base64.getDecoder();
+
+        String[] chunks = token.split("\\.");
+        String header = new String(decoder.decode(chunks[0]));
+        JSONObject payload = new JSONObject(new String(decoder.decode(chunks[1])));
+
+        return payload.getLong("exp");
     }
 
     private JSONObject refreshToken(JSONObject token) throws Exception {
